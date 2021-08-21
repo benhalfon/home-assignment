@@ -16,4 +16,6 @@ public interface UserService {
 
 	UserEntity updateUser(long id, UpdateUserBoundary request);
 
+	UserEntity getUser(String email);
+
 }

@@ -1,26 +1,29 @@
 package com.sony.assignment.controllers;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sony.assignment.boundaries.CreateUserBoundary;
 import com.sony.assignment.boundaries.UpdateUserBoundary;
 import com.sony.assignment.boundaries.UserBoundary;
+import com.sony.assignment.config.exceptions.QueryMissingKey;
 import com.sony.assignment.services.UserService;
 
 @RestController
 @RequestMapping("users")
+@CrossOrigin("*")
 public class UsersController {
 	
 	@Autowired
@@ -29,18 +32,16 @@ public class UsersController {
 	@Autowired
 	private ConversionService conversionService;
 	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public String getMessage() {
-		return "Ben";
-	}
 	
+	@CrossOrigin("*")
 	@GetMapping("displayAll")
 	public UserBoundary[] get() {
 		return Stream.of(service.getAll())
 				.map(e -> this.conversionService.convert(e, UserBoundary.class))
 				.toArray(UserBoundary[]::new);
 	}
-	
+//	
+//	@PreAuthorize("isAnonymous()")  
 	@PostMapping()
 	public UserBoundary post(@RequestBody CreateUserBoundary request) {
 		return this.conversionService
@@ -54,11 +55,19 @@ public class UsersController {
 	}
 	
 	@GetMapping()
-	public UserBoundary get(@RequestParam long id) {
-		return 
-				this.conversionService
-				.convert(service.getUser(id),UserBoundary.class);
+	public UserBoundary get(@RequestParam Map<String, String> getUserQuery) {
+		if(getUserQuery.containsKey("id"))
+			return this.conversionService
+				.convert(service.getUser(Long.parseLong(getUserQuery.get("id"))),
+						UserBoundary.class);
+		if(getUserQuery.containsKey("email"))
+			return this.conversionService
+					.convert(service.getUser(getUserQuery.get("email")),
+							UserBoundary.class);
+		throw new QueryMissingKey("getUserQuery", 
+				new String[]{"id","email"});
 	}
+	
 	
 	@PutMapping()
 	public UserBoundary put(@RequestParam long id,@RequestBody UpdateUserBoundary request) {
