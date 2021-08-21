@@ -52,20 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    web.ignoring().antMatchers(HttpMethod.POST,"/users");
 	}
 	
-	@Override
-  protected void configure(HttpSecurity security) throws Exception{
-		security.csrf().disable();
-	}
-	
-	
-//    @Override
-//    protected void configure(HttpSecurity security) throws Exception
-//    {	
-////    	security.csrf().disable();
-////    	security.httpBasic().disable();
-//    	security.csrf().disable().authorizeRequests()
-//    	.ignoring().antMatchers("/authFailure");
-////		.anyRequest().authenticated().and().httpBasic()
-////		.ignoring().antMatchers("/authFailure");
-//    }
+//	@Override
+//  protected void configure(HttpSecurity security) throws Exception{
+//		security.csrf().disable();
+//	}
 }

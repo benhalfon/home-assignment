@@ -40,8 +40,7 @@ public class UsersController {
 				.map(e -> this.conversionService.convert(e, UserBoundary.class))
 				.toArray(UserBoundary[]::new);
 	}
-//	
-//	@PreAuthorize("isAnonymous()")  
+	
 	@PostMapping()
 	public UserBoundary post(@RequestBody CreateUserBoundary request) {
 		return this.conversionService
