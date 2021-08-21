@@ -50,10 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 	    web.ignoring().antMatchers(HttpMethod.POST,"/users");
+	    web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+	    
 	}
-	
-//	@Override
-//  protected void configure(HttpSecurity security) throws Exception{
-//		security.csrf().disable();
-//	}
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable()
+        .authorizeRequests()
+        .anyRequest().authenticated().and().httpBasic();
+	}
 }

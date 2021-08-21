@@ -23,7 +23,7 @@ import com.sony.assignment.services.UserService;
 
 @RestController
 @RequestMapping("users")
-@CrossOrigin("*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UsersController {
 	
 	@Autowired
@@ -69,6 +69,7 @@ public class UsersController {
 	
 	
 	@PutMapping()
+	@CrossOrigin(origins = "*", allowedHeaders = "*")
 	public UserBoundary put(@RequestParam long id,@RequestBody UpdateUserBoundary request) {
 		return 
 				this.conversionService
